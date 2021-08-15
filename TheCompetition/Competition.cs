@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 
 namespace TheCompetition
 {
@@ -11,29 +10,12 @@ namespace TheCompetition
         private readonly Dictionary<string, Participant> _participants;
         private string _startPath;
         private string _endPath;
-        public Competition()
+        public Competition(string startPath, string endPath)
         {
+            _startPath = startPath;
+            _endPath = endPath;
             _participants = new Dictionary<string, Participant>();
-            InitPaths();
 
-        }
-        private void InitPaths()
-        {
-            IConfiguration configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables()
-                .Build();
-            _startPath = configuration["START_PATH"];
-            if (string.IsNullOrEmpty(_startPath))
-            {
-                throw new Exception("Missing start log path");
-            }
-
-            _endPath = configuration["END_PATH"];
-            if (string.IsNullOrEmpty(_endPath))
-            {
-                throw new Exception("Missing end log path");
-            }
         }
 
         private void RunCompetition()
