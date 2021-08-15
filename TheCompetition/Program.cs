@@ -13,7 +13,6 @@ namespace TheCompetition
                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                     .AddEnvironmentVariables()
                     .Build();
-                // Dictionary<string, Participant> participants = new Dictionary<string, Participant>();
                 var startPath = configuration["START_PATH"];
                 if (string.IsNullOrEmpty(startPath))
                 {
