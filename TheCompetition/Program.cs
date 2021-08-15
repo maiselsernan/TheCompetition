@@ -5,29 +5,17 @@ namespace TheCompetition
 {
     class Program
     {
+        private static string _startPath;
+        private static string _endPath;
         static void Main()
         {
             try
             {
-                IConfiguration configuration = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables()
-                    .Build();
-                var startPath = configuration["START_PATH"];
-                if (string.IsNullOrEmpty(startPath))
-                {
-                    throw new Exception("Missing start log path");
-                }
-
-                var endPath = configuration["END_PATH"];
-                if (string.IsNullOrEmpty(endPath))
-                {
-                    throw new Exception("Missing end log path");
-                }
+                InitPaths();
 
                 Competition competition = new Competition();
-                competition.ReadLog(startPath , State.Start);
-                competition.ReadLog(endPath , State.Finish);
+                competition.ReadLog(_startPath , State.Start);
+                competition.ReadLog(_endPath , State.Finish);
                 competition.CalculateDiff();
                 var i = 0;
                 foreach (var winner in competition.GetWinners())
@@ -40,6 +28,25 @@ namespace TheCompetition
             {
                 Console.WriteLine(e);
                 throw;
+            }
+        }
+
+        private static void InitPaths()
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
+            _startPath = configuration["START_PATH"];
+            if (string.IsNullOrEmpty(_startPath))
+            {
+                throw new Exception("Missing start log path");
+            }
+
+            _endPath = configuration["END_PATH"];
+            if (string.IsNullOrEmpty(_endPath))
+            {
+                throw new Exception("Missing end log path");
             }
         }
     }
