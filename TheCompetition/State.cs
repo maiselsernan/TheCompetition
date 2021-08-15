@@ -1,6 +1,6 @@
 ﻿namespace TheCompetition
 {
-    enum State
+    public   enum State
     {
         Start,
         Finish

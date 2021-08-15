@@ -2,7 +2,7 @@
 
 namespace TheCompetition
 {
-    class Participant
+    public   class Participant
     {
         public string Tag { get; set; }
         public DateTime StartTime { get; set; }
