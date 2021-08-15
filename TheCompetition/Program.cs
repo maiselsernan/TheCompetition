@@ -5,14 +5,13 @@ namespace TheCompetition
 {
     class Program
     {
-        private static string _startPath;
-        private static string _endPath;
+
         static void Main()
         {
             try
             {
-                GetPaths();
-                var competition = new Competition(_startPath, _endPath);
+                var paths = GetPaths();
+                var competition = new Competition(paths.StartPath, paths.EndPath);
                 var i = 0;
                 foreach (var winner in competition.GetWinners())
                 {
@@ -26,23 +25,24 @@ namespace TheCompetition
                 throw;
             }
         }
-        private static void GetPaths()
+        private static (string StartPath, string EndPath) GetPaths()
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .Build();
-            _startPath = configuration["START_PATH"];
-            if (string.IsNullOrEmpty(_startPath))
+            var startPath = configuration["START_PATH"];
+            if (string.IsNullOrEmpty(startPath))
             {
                 throw new Exception("Missing start log path");
             }
 
-            _endPath = configuration["END_PATH"];
-            if (string.IsNullOrEmpty(_endPath))
+            var endPath = configuration["END_PATH"];
+            if (string.IsNullOrEmpty(endPath))
             {
                 throw new Exception("Missing end log path");
             }
+            return (startPath, endPath);
         }
     }
 

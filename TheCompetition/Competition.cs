@@ -8,8 +8,8 @@ namespace TheCompetition
     public class Competition
     {
         private readonly Dictionary<string, Participant> _participants;
-        private string _startPath;
-        private string _endPath;
+        private readonly string _startPath;
+        private readonly string _endPath;
         public Competition(string startPath, string endPath)
         {
             _startPath = startPath;
