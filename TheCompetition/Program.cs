@@ -11,7 +11,7 @@ namespace TheCompetition
         {
             try
             {
-                InitPaths();
+                GetPaths();
                 var competition = new Competition(_startPath, _endPath);
                 var i = 0;
                 foreach (var winner in competition.GetWinners())
@@ -26,7 +26,7 @@ namespace TheCompetition
                 throw;
             }
         }
-        private static void InitPaths()
+        private static void GetPaths()
         {
             IConfiguration configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
