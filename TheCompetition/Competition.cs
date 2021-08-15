@@ -2,25 +2,57 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace TheCompetition
 {
     public class Competition
     {
-        readonly Dictionary<string, Participant> _participants;
-
+        private readonly Dictionary<string, Participant> _participants;
+        private string _startPath;
+        private string _endPath;
         public Competition()
         {
             _participants = new Dictionary<string, Participant>();
+            InitPaths();
+
         }
+        private void InitPaths()
+        {
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
+            _startPath = configuration["START_PATH"];
+            if (string.IsNullOrEmpty(_startPath))
+            {
+                throw new Exception("Missing start log path");
+            }
+
+            _endPath = configuration["END_PATH"];
+            if (string.IsNullOrEmpty(_endPath))
+            {
+                throw new Exception("Missing end log path");
+            }
+        }
+
+        private void RunCompetition()
+        {
+            ReadLog(_startPath, State.Start);
+            ReadLog(_endPath, State.Finish);
+            CalculateDiff();
+        }
+
+
         public IEnumerable<Participant> GetWinners()
         {
+            RunCompetition();
             return _participants.Values.
                 Where(o => o.StartTime != DateTime.MinValue && o.EndTime != DateTime.MinValue).
                 OrderBy(x => x.Diff).Take(10);
         }
 
-        public void ReadLog(string path, State state)
+        private void ReadLog(string path, State state)
         {
             if (!File.Exists(path))
             {
@@ -54,7 +86,7 @@ namespace TheCompetition
             }
         }
 
-        public void AddParticipantEnd(string tag, DateTime dateTime)
+        private void AddParticipantEnd(string tag, DateTime dateTime)
         {
             if (_participants.TryGetValue(tag, out Participant participant))
             {
@@ -69,7 +101,7 @@ namespace TheCompetition
             }
         }
 
-        public void AddParticipantStart(string tag, DateTime dateTime)
+        private void AddParticipantStart(string tag, DateTime dateTime)
         {
             if (_participants.TryGetValue(tag, out Participant participant))
             {
@@ -84,7 +116,7 @@ namespace TheCompetition
             }
         }
 
-        public void CalculateDiff()
+        private void CalculateDiff()
         {
             foreach (var participant in _participants.Values.ToList())
             {
@@ -92,4 +124,5 @@ namespace TheCompetition
             }
         }
     }
+
 }
