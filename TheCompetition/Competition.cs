@@ -72,7 +72,7 @@ namespace TheCompetition
         {
             if (_participants.TryGetValue(tag, out Participant participant))
             {
-                if (dateTime > participant.StartTime)
+                if (dateTime > participant.EndTime)
                 {
                     participant.EndTime = dateTime;
                 }
